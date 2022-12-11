@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'take_picture.dart';
 import 'list_items.dart';
+import 'image_carousel.dart';
 
 class NewPost extends StatefulWidget {
   const NewPost({super.key});
@@ -119,102 +120,91 @@ class _NewPostState extends State<NewPost> {
       //test
       body: Form(
         key: _formKey,
-        child: Container(
-          child: SingleChildScrollView(
-            child: Column(
-              children: <Widget>[
-                TextFormField(
-                  decoration: const InputDecoration(hintText: "Enter Title"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a valid title';
-                    }
-                    return null;
-                  },
-                  controller: titleController,
-                ),
-                TextFormField(
-                  decoration: const InputDecoration(hintText: "Enter Price"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a price';
-                    }
-                    return null;
-                  },
-                  controller: priceController,
-                ),
-                TextFormField(
-                  decoration:
-                      const InputDecoration(hintText: "Enter Description"),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a description';
-                    }
-                    return null;
-                  },
-                  minLines: 3,
-                  maxLines: null,
-                  keyboardType: TextInputType.multiline,
-                  controller: descriptionController,
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          takeApicture(context);
-                        },
-                        child: Row(
-                          children: const [
-                            Text("Take a picture "),
-                            Icon(Icons.add_a_photo)
-                          ],
-                        ),
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              TextFormField(
+                decoration: const InputDecoration(hintText: "Enter Title"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a valid title';
+                  }
+                  return null;
+                },
+                controller: titleController,
+              ),
+              TextFormField(
+                decoration: const InputDecoration(hintText: "Enter Price"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a price';
+                  }
+                  return null;
+                },
+                controller: priceController,
+              ),
+              TextFormField(
+                decoration:
+                    const InputDecoration(hintText: "Enter Description"),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter a description';
+                  }
+                  return null;
+                },
+                minLines: 3,
+                maxLines: null,
+                keyboardType: TextInputType.multiline,
+                controller: descriptionController,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 50),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        takeApicture(context);
+                      },
+                      child: Row(
+                        children: const [
+                          Text("Take a picture "),
+                          Icon(Icons.add_a_photo)
+                        ],
                       ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final image = await picker.pickImage(
-                              source: ImageSource.gallery);
-                          setState(() {
-                            itemImages.add(image!.path);
-                          });
-                        },
-                        child: const Text("Upload from Gallery"),
-                      ),
-                    ],
-                  ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        final image =
+                            await picker.pickImage(source: ImageSource.gallery);
+                        setState(() {
+                          itemImages.add(image!.path);
+                        });
+                      },
+                      child: const Text("Upload from Gallery"),
+                    ),
+                  ],
                 ),
-                Padding(
-                    padding: const EdgeInsets.only(top: 25),
-                    child: SizedBox(
-                      width: MediaQuery.of(context).size.width,
-                      height: 300,
-                      child:
-                          ListView(scrollDirection: Axis.horizontal, children: [
-                        for (var img in itemImages)
-                          Image.file(
-                            File(img),
-                            width: MediaQuery.of(context).size.width,
-                            height: 300,
-                            fit: BoxFit.cover,
-                          )
-                      ]),
-                    )),
-                Padding(
+              ),
+              Padding(
                   padding: const EdgeInsets.only(top: 25),
-                  child: ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        uploadPost(context);
-                      }
-                    },
-                    child: const Text("Submit"),
-                  ),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: 300,
+                    child: ImageList(images: itemImages),
+                  )),
+              Padding(
+                padding: const EdgeInsets.only(top: 25),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      uploadPost(context);
+                    }
+                  },
+                  child: const Text("Submit"),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
