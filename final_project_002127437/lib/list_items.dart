@@ -30,13 +30,15 @@ class _MyHomePageState extends State<MyHomePage> {
 
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()
-      ..showSnackBar(SnackBar(content: Text('$result')));
+    if (result != null) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text('$result')));
 
-    setState(() {
-      ++_itemCount;
-    });
+      setState(() {
+        ++_itemCount;
+      });
+    }
   }
 
   Future _getItems() async {

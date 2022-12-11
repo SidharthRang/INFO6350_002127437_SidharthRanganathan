@@ -164,7 +164,15 @@ class _NewPostState extends State<NewPost> {
                   children: [
                     ElevatedButton(
                       onPressed: () {
-                        takeApicture(context);
+                        if (itemImages.length < 4) {
+                          takeApicture(context);
+                        } else {
+                          ScaffoldMessenger.of(context)
+                            ..removeCurrentSnackBar()
+                            ..showSnackBar(const SnackBar(
+                                content:
+                                    Text('Only a total of 4 images allowed')));
+                        }
                       },
                       child: Row(
                         children: const [
@@ -175,11 +183,19 @@ class _NewPostState extends State<NewPost> {
                     ),
                     ElevatedButton(
                       onPressed: () async {
-                        final image =
-                            await picker.pickImage(source: ImageSource.gallery);
-                        setState(() {
-                          itemImages.add(image!.path);
-                        });
+                        if (itemImages.length < 4) {
+                          final image = await picker.pickImage(
+                              source: ImageSource.gallery);
+                          setState(() {
+                            itemImages.add(image!.path);
+                          });
+                        } else {
+                          ScaffoldMessenger.of(context)
+                            ..removeCurrentSnackBar()
+                            ..showSnackBar(const SnackBar(
+                                content:
+                                    Text('Only a total of 4 images allowed')));
+                        }
                       },
                       child: const Text("Upload from Gallery"),
                     ),
@@ -191,7 +207,10 @@ class _NewPostState extends State<NewPost> {
                   child: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: 300,
-                    child: ImageList(images: itemImages),
+                    child: ImageList(
+                      images: itemImages,
+                      activity: "NewPost",
+                    ),
                   )),
               Padding(
                 padding: const EdgeInsets.only(top: 25),

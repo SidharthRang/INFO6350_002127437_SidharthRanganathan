@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'post_item.dart';
 import 'list_items.dart';
+import 'image_carousel.dart';
 
 class ItemDetail extends StatefulWidget {
   const ItemDetail({super.key, required this.docId});
@@ -83,6 +84,14 @@ class _ItemDetailState extends State<ItemDetail> {
           Map<String, dynamic> doc = snapshot.data as Map<String, dynamic>;
           return ListView(
             children: <Widget>[
+              SizedBox(
+                width: MediaQuery.of(context).size.width,
+                height: 300,
+                child: ImageList(
+                  images: doc["images"],
+                  activity: "PostDetail",
+                ),
+              ),
               TextFormField(
                 decoration: const InputDecoration(
                   label: Text(
@@ -119,22 +128,6 @@ class _ItemDetailState extends State<ItemDetail> {
                 maxLines: null,
                 keyboardType: TextInputType.multiline,
               ),
-              Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: 300,
-                    child:
-                        ListView(scrollDirection: Axis.horizontal, children: [
-                      for (var imgUrl in doc["images"])
-                        Image.network(
-                          imgUrl,
-                          width: MediaQuery.of(context).size.width,
-                          height: 300,
-                          fit: BoxFit.cover,
-                        )
-                    ]),
-                  )),
             ],
           );
         },
