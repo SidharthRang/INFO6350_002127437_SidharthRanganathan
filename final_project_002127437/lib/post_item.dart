@@ -168,10 +168,20 @@ class _NewPostState extends State<NewPost> {
                         },
                         child: Row(
                           children: const [
-                            Text("Take a picture and upload  "),
+                            Text("Take a picture "),
                             Icon(Icons.add_a_photo)
                           ],
                         ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () async {
+                          final image = await picker.pickImage(
+                              source: ImageSource.gallery);
+                          setState(() {
+                            itemImages.add(image!.path);
+                          });
+                        },
+                        child: const Text("Upload from Gallery"),
                       ),
                     ],
                   ),

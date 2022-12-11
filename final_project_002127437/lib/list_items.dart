@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -106,6 +108,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   (snapshot.data as QuerySnapshot).docs[index];
               Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
               return ListTile(
+                leading: GestureDetector(
+                  onTap: () async {
+                    await Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => DisplayPictureScreen(
+                          imagePath: data["images"][0],
+                          imageTitle: data["title"],
+                        ),
+                      ),
+                    );
+                  },
+                  child: data["images"] != null
+                      ? Image.network(data["images"][0])
+                      : Container(),
+                ),
                 title: Text(data["title"]),
                 subtitle: Text(data['description']),
                 trailing: Text(data['price']),
@@ -117,6 +134,27 @@ class _MyHomePageState extends State<MyHomePage> {
             itemCount: snapshot.data.docs.length,
           );
         },
+      ),
+    );
+  }
+}
+
+class DisplayPictureScreen extends StatelessWidget {
+  final String imagePath;
+  final String imageTitle;
+
+  const DisplayPictureScreen(
+      {super.key, required this.imagePath, required this.imageTitle});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text(imageTitle)),
+      backgroundColor: Colors.black,
+      // The image is stored as a file on the device. Use the `Image.file`
+      // constructor with the given path to display the image.
+      body: Center(
+        child: Image.network(imagePath),
       ),
     );
   }
