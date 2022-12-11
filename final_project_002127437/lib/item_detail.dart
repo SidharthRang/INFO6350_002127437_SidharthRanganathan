@@ -14,8 +14,6 @@ class ItemDetail extends StatefulWidget {
 }
 
 class _ItemDetailState extends State<ItemDetail> {
-  final _detailKey = GlobalKey<FormState>();
-
   final itemImages = <String>[];
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
