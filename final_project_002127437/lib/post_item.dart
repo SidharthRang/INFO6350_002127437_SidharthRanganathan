@@ -186,9 +186,11 @@ class _NewPostState extends State<NewPost> {
                         if (itemImages.length < 4) {
                           final image = await picker.pickImage(
                               source: ImageSource.gallery);
-                          setState(() {
-                            itemImages.add(image!.path);
-                          });
+                          if (image != null) {
+                            setState(() {
+                              itemImages.add(image.path);
+                            });
+                          }
                         } else {
                           ScaffoldMessenger.of(context)
                             ..removeCurrentSnackBar()
