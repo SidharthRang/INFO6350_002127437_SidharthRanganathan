@@ -85,6 +85,19 @@ class _NewPostState extends State<NewPost> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add a new Item'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () {
+              if (_formKey.currentState!.validate()) {
+                uploadPost(context);
+              }
+            },
+            child: const Text(
+              "Save",
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+          ),
+        ],
       ),
       drawer: Drawer(
         child: ListView(
@@ -214,17 +227,6 @@ class _NewPostState extends State<NewPost> {
                       activity: "NewPost",
                     ),
                   )),
-              Padding(
-                padding: const EdgeInsets.only(top: 25),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      uploadPost(context);
-                    }
-                  },
-                  child: const Text("Submit"),
-                ),
-              ),
             ],
           ),
         ),
