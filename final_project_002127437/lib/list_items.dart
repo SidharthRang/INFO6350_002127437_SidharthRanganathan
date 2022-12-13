@@ -101,11 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
         future: _getItems(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
-            if (snapshot.hasData) {
+            QuerySnapshot snapshotData = snapshot.data as QuerySnapshot;
+            if (snapshotData.docs.isNotEmpty) {
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  DocumentSnapshot doc =
-                      (snapshot.data as QuerySnapshot).docs[index];
+                  DocumentSnapshot doc = snapshotData.docs[index];
                   Map<String, dynamic> data =
                       doc.data() as Map<String, dynamic>;
                   return ListTile(
@@ -124,7 +124,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         }
                       },
                       child: data["images"].length > 0
-                          ? Image.network(data["images"][0])
+                          ? Image.network(
+                              data["images"][0],
+                              width: 50,
+                            )
                           : const Icon(Icons.flutter_dash),
                     ),
                     title: Text(data["title"]),
@@ -135,7 +138,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     },
                   );
                 },
-                itemCount: snapshot.data.docs.length,
+                itemCount: snapshotData.docs.length,
+              );
+            } else {
+              return const Center(
+                child: Text(
+                  "No Items for Sale",
+                  style: TextStyle(fontSize: 24, color: Colors.grey),
+                ),
               );
             }
           }
