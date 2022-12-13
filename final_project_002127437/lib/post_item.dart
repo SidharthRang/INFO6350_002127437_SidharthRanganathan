@@ -197,11 +197,11 @@ class _NewPostState extends State<NewPost> {
                     ElevatedButton(
                       onPressed: () async {
                         if (itemImages.length < 4) {
-                          final image = await picker.pickImage(
-                              source: ImageSource.gallery);
-                          if (image != null) {
+                          final images = await picker.pickMultiImage();
+                          if (images.isNotEmpty) {
+                            final imagePaths = images.map((img) => img.path);
                             setState(() {
-                              itemImages.add(image.path);
+                              itemImages.addAll(imagePaths);
                             });
                           }
                         } else {

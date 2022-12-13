@@ -100,41 +100,46 @@ class _MyHomePageState extends State<MyHomePage> {
       body: FutureBuilder(
         future: _getItems(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
-          }
-          return ListView.builder(
-            itemBuilder: (context, index) {
-              DocumentSnapshot doc =
-                  (snapshot.data as QuerySnapshot).docs[index];
-              Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-              return ListTile(
-                leading: GestureDetector(
-                  onTap: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => DisplayPictureScreen(
-                          imagePath: data["images"][0],
-                          imageTitle: data["title"],
-                          screen: "PostDetail",
-                        ),
-                      ),
-                    );
-                  },
-                  child: data["images"] != null
-                      ? Image.network(data["images"][0])
-                      : Container(),
-                ),
-                title: Text(data["title"]),
-                subtitle: Text(data['description']),
-                trailing: Text(data['price']),
-                onTap: () {
-                  _getInfo(data["title"]);
+          if (snapshot.connectionState == ConnectionState.done) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemBuilder: (context, index) {
+                  DocumentSnapshot doc =
+                      (snapshot.data as QuerySnapshot).docs[index];
+                  Map<String, dynamic> data =
+                      doc.data() as Map<String, dynamic>;
+                  return ListTile(
+                    leading: GestureDetector(
+                      onTap: () async {
+                        if (data["images"].length > 0) {
+                          await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => DisplayPictureScreen(
+                                imagePath: data["images"][0],
+                                imageTitle: data["title"],
+                                screen: "PostDetail",
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: data["images"].length > 0
+                          ? Image.network(data["images"][0])
+                          : const Icon(Icons.flutter_dash),
+                    ),
+                    title: Text(data["title"]),
+                    subtitle: Text(data['description']),
+                    trailing: Text(data['price']),
+                    onTap: () {
+                      _getInfo(data["title"]);
+                    },
+                  );
                 },
+                itemCount: snapshot.data.docs.length,
               );
-            },
-            itemCount: snapshot.data.docs.length,
-          );
+            }
+          }
+          return const Center(child: CircularProgressIndicator());
         },
       ),
     );
